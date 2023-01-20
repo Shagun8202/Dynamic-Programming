@@ -1,0 +1,55 @@
+#include <bits/stdc++.h> 
+int solve(vector<vector<int>>& triangle,int n,vector<vector<int>>& dp,int i,int j){
+    if(i == n){
+        return triangle[i][j];
+    }
+    if(dp[i][j] !=-1){
+        dp[i][j];
+    }
+    int d = triangle[i][j]+ solve(triangle,n,dp,i+1,j);
+    int dg = triangle[i][j] + solve(triangle,n,dp,i+1,j+1);
+    int ans = min(d,dg);
+    dp[i][j] = ans;
+    return ans;
+}
+int solve2(vector<vector<int>>& triangle,int n,int i,int j){
+     vector<vector<int>> dp(n,vector<int>(n,-1));
+    for(int i = 0;i<n;i++){
+        dp[n-1][i] = triangle[n-1][i];
+    }
+    for(int k = n-2;k>=0;k--){
+        for(int l = k ;l>=0;l--){
+            int d = triangle[k][l]+ dp[k+1][l];
+           int dg = triangle[k][l] + dp[k+1][l+1];
+           int ans = min(d,dg);
+             dp[k][l] = ans;
+        }
+    }
+    
+   
+    return dp[0][0];
+}
+int solve3(vector<vector<int>>& triangle,int n,int i,int j){
+     vector<int> prev(n,0) ;
+    for(int i = 0;i<n;i++){
+        prev[i] = triangle[n-1][i];
+    }
+    for(int k = n-2;k>=0;k--){
+        vector<int> curr(n,0);
+        for(int l = k ;l>=0;l--){
+            int d = triangle[k][l]+ prev[l];
+           int dg = triangle[k][l] + prev[l+1];
+           int ans = min(d,dg);
+             curr[l] = ans;
+        }
+        prev = curr;
+    }
+    
+   
+    return prev[0];
+}
+int minimumPathSum(vector<vector<int>>& triangle, int n){
+  vector<vector<int>> dp(n,vector<int>(n,-1));
+    int ans = solve3(triangle,n,0,0);
+    return ans;
+}
