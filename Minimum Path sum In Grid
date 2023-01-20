@@ -1,0 +1,50 @@
+#include <limits.h>
+int solve(int i,int j,vector<vector<int>> &grid,vector<vector<int>> &dp){
+    if(i == 0 && j ==0){
+        return grid[i][j];
+    }
+    if(i< 0 || j < 0){
+        return 1e9;
+    }
+    if(dp[i][j] != -1){
+        return dp[i][j];
+    }
+    int up = grid[i][j] + solve(i-1,j,grid,dp);
+    int left = grid[i][j] + solve(i,j-1,grid,dp);
+    int ans = min(up,left);
+    dp[i][j] = ans;
+    return dp[i][j];
+    }
+int solve2(int i,int j,vector<vector<int>> &grid){
+     vector<vector<int>> dp(i,vector<int>(j,-1));
+    for(int n = 0;n<i;n++){
+        for(int m = 0;m<j;m++){
+            if(n == 0 && m ==0){
+                dp[n][m] = grid[n][m];
+            }
+            else{
+                int up = 0;
+                int left = 0;
+                if(n>0)
+                  up = grid[n][m] + dp[n-1][m];
+                else
+                    up = up + 1e9;
+                if(m>0)
+                  left = grid[n][m] + dp[n][m-1];
+                else
+                    left = left +1e9;
+                 int ans = min(up,left);
+                dp[n][m] = ans;
+            }
+        }
+    }
+   
+    return dp[i-1][j-1];
+}
+int minSumPath(vector<vector<int>> &grid) {
+    int m = grid[0].size();
+    int n = grid.size(); 
+    vector<vector<int>> dp(n,vector<int>(m,-1));
+    int ans = solve2(n,m,grid);
+    return ans;
+}
