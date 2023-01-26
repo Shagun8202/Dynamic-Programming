@@ -1,0 +1,69 @@
+#include <bits/stdc++.h> 
+bool solve(int n,int k,vector<int> &arr,vector<vector<int>> &dp){
+    if(k==0){
+       return true;
+    }
+    if(n==0){
+        if(arr[0]==k){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    if(dp[n][k] != -1){
+        return dp[n][k];
+    }
+    bool take = false;
+    if(arr[n]<=k)
+     take =solve(n-1,k-arr[n],arr,dp);
+    bool nottake =solve(n-1,k,arr,dp);
+
+    return dp[n][k]= take | nottake;
+}
+bool solve2(int n,int k,vector<int> &arr){
+     vector<vector<bool>> dp(n,vector<bool>(k+1,0));
+     for(int i=0;i<n;i++){
+         dp[i][0] = true;
+     }
+  dp[0][arr[0]]=true;
+  for(int i=1;i<n;i++){
+      for(int j =1;j<=k;j++){
+       bool take = false;
+      if(arr[i]<=j)
+      take =dp[i-1][j-arr[i]];
+      bool nottake = dp[i-1][j];
+       dp[i][j]=take|nottake;
+      }
+  }
+
+return dp[n-1][k];
+
+}
+bool solve3(int n,int k,vector<int> &arr){
+     vector<bool> front(k+1,0);
+     vector<bool> curr(k+1,0);
+
+    front[0] = true;
+    curr[0]=true;
+  front[arr[0]]=true;
+  for(int i=1;i<n;i++){
+      for(int j =1;j<=k;j++){
+       bool take = false;
+      if(arr[i]<=j)
+      take =front[j-arr[i]];
+      bool nottake = front[j];
+       curr[j]=take|nottake;
+      }
+      front=curr;
+  }
+
+return front[k];
+
+}
+
+bool subsetSumToK(int n, int k, vector<int> &arr) {
+    vector<vector<int>> dp(n,vector<int>(k+1,-1));
+    int ans = solve3(n,k,arr);
+    return ans;
+}
