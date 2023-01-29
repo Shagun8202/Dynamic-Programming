@@ -1,0 +1,39 @@
+#include <bits/stdc++.h> 
+int solve(int n,int w,vector<int> &val,vector<int> &wt,vector<vector<int> > &dp){
+    if(n==0){
+        return((int)(w/wt[0]))*val[0];
+    }
+    if(dp[n][w] != -1){
+        return dp[n][w];
+    }
+    int nottake = solve(n-1,w,val,wt,dp);
+    int take = 0;
+    if(wt[n]<=w){
+        take = val[n]+solve(n,w-wt[n],val,wt,dp);
+    }
+    return dp[n][w] = max(take,nottake);
+}
+int solve2(int num,int maxw,vector<int> &val,vector<int> &wt){
+    vector<vector<int> > dp(num,vector<int>(maxw+1,0));
+for(int i = 0;i<=maxw;i++){
+    dp[0][i] =((int)(i/wt[0]))*val[0];
+}
+for(int n=1;n<num;n++){
+    for(int w=0;w<=maxw;w++){
+         int nottake = dp[n-1][w];
+    int take = 0;
+    if(wt[n]<=w){
+        take = val[n]+dp[n][w-wt[n]];
+    }
+    dp[n][w] = max(take,nottake);
+    }
+}
+return dp[num-1][maxw];
+}
+
+int unboundedKnapsack(int n, int w, vector<int> &profit, vector<int> &weight)
+{
+    vector<vector<int> > dp(n,vector<int>(w+1,-1));
+    int ans = solve2(n,w,profit,weight);
+    return ans;
+}
