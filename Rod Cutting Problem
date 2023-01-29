@@ -1,0 +1,22 @@
+int solve(int n,int tar,vector<int> &price,vector<vector<int>> &dp){
+	if(n==0){
+		return tar*price[0];
+	}
+	if(dp[n][tar]!= -1){
+		return dp[n][tar];
+	}
+	int nottake = solve(n-1,tar,price,dp);
+	int take= INT_MIN;
+	int rodlength = n+1;
+	if(rodlength<=tar){
+		take = price[n] +solve(n,tar-rodlength,price,dp);
+	}
+	return dp[n][tar] = max(take,nottake);
+}
+int cutRod(vector<int> &price, int n)
+{ 
+	int m = price.size();
+	vector<vector<int>> dp(m,vector<int>(n+1,-1));
+	int ans = solve(m-1,n,price,dp);
+	return ans;
+}
